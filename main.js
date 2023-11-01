@@ -22,7 +22,7 @@ let datos = true;
 
 while (datos) {
     let ingresodebidones = parseFloat(prompt("Ingrese la cantidad de bidones"));
-    if (!Number(ingresodebidones)) {
+    if (!isNaN(ingresodebidones)) {
         if (ingresodebidones >= 5) {
             let precioFinal = calcularPrecioTotalYAplicarDescuento(ingresodebidones);
             alert("Precio original (sin descuento): $" + (precioFinal + 2000) +
