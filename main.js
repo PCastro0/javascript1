@@ -1,3 +1,9 @@
+const Producto = function(nombre,precio,stock){       
+    this.nombre = nombre
+    this.precio = precio
+    this.stock = stock
+}
+
 let usuario = true;
 while (usuario) {
     let nombredeusuario = prompt("Ingrese su nombre de usuario para iniciar sesión");
@@ -37,5 +43,46 @@ while (datos) {
     datos = confirm("¿Desea ingresar otra cantidad?");
 }
 
+let producto1 = new Producto("mix", 5500, 20)
+let producto2 = new Producto("deco", 7500, 20)
+let producto3 = new Producto("sin formol", 3500, 35)
+
+let lista = [producto1,producto2,producto3,]
 
 
+function filtrarAlisados(){
+    let palabraClave = prompt("ingresa el alisado que buscas").toUpperCase().trim()
+    let resultado = lista.filter((x)=>x.nombre.toUpperCase().includes(palabraClave))
+
+
+    if(resultado.length >0){
+        console.table(resultado)
+    }else{
+        alert("error el producto no existe " + palabraClave)
+        let respuesta= confirm("lo queres agregar?")
+
+        if(respuesta == true ){
+            agregarNuevoProducto()
+        }
+    }
+}
+
+function agregarNuevoProducto(){
+
+    let nombre = prompt("ingresa el nombre del producto")
+    let precio = parseFloat(prompt("ingresa el precio del producto")) 
+    let stock = parseInt(prompt("ingresa el stock del producto"))
+
+
+    if(isNaN(precio) || isNaN(stock) || nombre===""){
+        alert("por favor ingresa valores validos")
+        return
+    }
+
+    let producto = new Producto(nombre,precio,stock)
+
+    lista.push(producto)
+    console.table(lista)
+
+
+}
