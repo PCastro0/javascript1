@@ -3,22 +3,24 @@ const Producto = function(nombre,precio){
     this.precio = precio
 }
 let usuario=true;
-
+//agrego los objetos a la lista
 let producto1 = new Producto("Mix", 5000)
 let producto2 = new Producto("Deco", 6000)
 let producto3 = new Producto("Sin Formol", 3000)
 let lista = [producto1,producto2,producto3]
+//si se encuentra algo en local va a la lista
 if(localStorage.getItem("productos")){
     lista = JSON.parse(localStorage.getItem("productos"))
 }else{
-    lista = lista  
+    lista = lista //sino , sigue igual 
 }
+//agrego función para que se filtren los productos que tengo en la lista
 function filtrarProductos(){
     const body = document.querySelector("body") 
     const input = document.getElementById("buscarAlisados").value 
     const palabraClave = input.trim().toUpperCase() 
     const resultado = lista.filter(  (producto)=> producto.nombre.toUpperCase().includes(palabraClave))
-
+//si hay resultados lo muestro con una card, lo almaceno y le agrego una clase para agregar el css
     if(resultado.length > 0){  
 
         const container = document.createElement("div")  
@@ -42,6 +44,7 @@ function filtrarProductos(){
         alert("no hay coincidencias")
     }
 }
+//sino esta el producto se lo puede sumar con la siguiente funcion, coloco formulario
 function agregarProducto(){
 
     const form = document.createElement("form")  
@@ -67,7 +70,7 @@ function agregarProducto(){
         }
 
         const producto = new Producto (nombreInput, precioInput, )
-
+//si agrego algo que ya existe dejo alert
         if (lista.some( (elemento)=> elemento.nombre === producto.nombre)){ 
             alert("el producto ya se encuentra agregado")
             return
@@ -103,7 +106,7 @@ function agregarProducto(){
     const body = document.querySelector("body")
     body.appendChild(form)
 }
-
+//agrego las botonerasde html para css
 const buscar = document.getElementById("filtrar")
 buscar.classList.add("button") 
 buscar.addEventListener("click", filtrarProductos)
