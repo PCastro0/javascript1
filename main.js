@@ -1,88 +1,115 @@
-const Producto = function(nombre,precio,stock){       
+const Producto = function(nombre,precio){       
     this.nombre = nombre
     this.precio = precio
-    this.stock = stock
 }
+let usuario=true;
 
-let usuario = true;
-while (usuario) {
-    let nombredeusuario = prompt("Ingrese su nombre de usuario para iniciar sesión");
-    if (nombredeusuario != "") {
-        alert("Hola " + nombredeusuario + " ya ingresaste a ALISADOSMETH!");
-        alert("Hacenos tu pedido, recordá que si supera los 5 bidones tenes un descuento!")
-        usuario = false;
-    } else {
-        alert("El usuario ingresado es incorrecto");
-    }
+let producto1 = new Producto("Mix", 5000)
+let producto2 = new Producto("Deco", 6000)
+let producto3 = new Producto("Sin Formol", 3000)
+let lista = [producto1,producto2,producto3]
+if(localStorage.getItem("productos")){
+    lista = JSON.parse(localStorage.getItem("productos"))
+}else{
+    lista = lista  
 }
+function filtrarProductos(){
+    const body = document.querySelector("body") 
+    const input = document.getElementById("buscarAlisados").value 
+    const palabraClave = input.trim().toUpperCase() 
+    const resultado = lista.filter(  (producto)=> producto.nombre.toUpperCase().includes(palabraClave))
 
-function calcularPrecioTotalYAplicarDescuento(cantidadArticulos) {
-    let precioPorArticulo = 5000;
-    let precioTotal = cantidadArticulos * precioPorArticulo;
-    let descuento = 2000;
-    alert("El descuento total es: $" + descuento);
-    return precioTotal - descuento;
-}
+    if(resultado.length > 0){  
 
-let datos = true;
+        const container = document.createElement("div")  
+        container.classList.add("container")  
 
-while (datos) {
-    let ingresodebidones = parseFloat(prompt("Ingrese la cantidad de bidones"));
-    if (!isNaN(ingresodebidones)) {
-        if (ingresodebidones >= 5) {
-            let precioFinal = calcularPrecioTotalYAplicarDescuento(ingresodebidones);
-            alert("Precio original (sin descuento): $" + (precioFinal + 2000) +
-                "\nPrecio con descuento: $" + precioFinal);
-        } else {
-            alert("Precio original (sin descuento): $" + (ingresodebidones * 5000) +
-                "\nNo se aplicó descuento.");
-        }
-    } else {
-        alert("Ingrese una cantidad válida.");
-    }
-    datos = confirm("¿Desea ingresar otra cantidad?");
-}
+        resultado.forEach( (producto)=>{ 
+            const card = document.createElement("div")
 
-let producto1 = new Producto("mix", 5500, 20)
-let producto2 = new Producto("deco", 7500, 20)
-let producto3 = new Producto("sin formol", 3500, 35)
+        const nombre = document.createElement("h2")
+        nombre.textContent = `nombre: ${producto.nombre}`
+        card.appendChild(nombre)  
 
-let lista = [producto1,producto2,producto3,]
+        const precio = document.createElement("p")
+        precio.textContent = `precio: ${producto.precio}`
+        card.appendChild(precio)
+        container.appendChild(card)  
+        })
+        body.appendChild(container) 
 
-
-function filtrarAlisados(){
-    let palabraClave = prompt("ingresa el alisado que buscas").toUpperCase().trim()
-    let resultado = lista.filter((x)=>x.nombre.toUpperCase().includes(palabraClave))
-
-
-    if(resultado.length >0){
-        console.table(resultado)
     }else{
-        alert("error el producto no existe " + palabraClave)
-        let respuesta= confirm("lo queres agregar?")
+        alert("no hay coincidencias")
+    }
+}
+function agregarProducto(){
 
-        if(respuesta == true ){
-            agregarNuevoProducto()
+    const form = document.createElement("form")  
+    form.innerHTML=`
+    <label for="nombre-input">Nombre:</label>
+    <input id= "nombre-input" type="text" step="0.01" required>
+    
+    <label for="precio-input">Precio:</label>
+    <input id= "precio-input" type="number" step="0.01" required>
+    <button type="submit">Agregar</button>
+    `
+
+    form.addEventListener("submit", function (e){ 
+        e.preventDefault();
+
+        const nombreInput = document.getElementById("nombre-input").value.trim()
+        const precioInput = parseFloat(document.getElementById("precio-input").value)
+        
+
+        if(isNaN(precioInput) || nombreInput === ""){
+            alert("No se puede agregar producto")
+            return
         }
-    }
+
+        const producto = new Producto (nombreInput, precioInput, )
+
+        if (lista.some( (elemento)=> elemento.nombre === producto.nombre)){ 
+            alert("el producto ya se encuentra agregado")
+            return
+        }
+
+        lista.push(producto) 
+
+        localStorage.setItem("productos", JSON.stringify(lista))
+        alert(`se agrego el producto ${producto.nombre} a la lista`)  
+
+        const container =  document.createElement("div")
+        
+        lista.forEach((producto)=>{
+            const card = document.createElement("div")
+
+            const nombre = document.createElement("h2")
+        nombre.textContent = `nombre: ${producto.nombre}`
+        card.appendChild(nombre)
+
+        const precio = document.createElement("p")
+        precio.textContent = `precio: ${producto.precio}`
+        card.appendChild(precio)
+        container.appendChild(card)
+        })
+
+        const body = document.querySelector("body")
+        body.appendChild(container) 
+
+        form.reset()  
+
+    })
+
+    const body = document.querySelector("body")
+    body.appendChild(form)
 }
 
-function agregarNuevoProducto(){
-
-    let nombre = prompt("ingresa el nombre del producto")
-    let precio = parseFloat(prompt("ingresa el precio del producto")) 
-    let stock = parseInt(prompt("ingresa el stock del producto"))
+const buscar = document.getElementById("filtrar")
+buscar.classList.add("button") 
+buscar.addEventListener("click", filtrarProductos)
 
 
-    if(isNaN(precio) || isNaN(stock) || nombre===""){
-        alert("por favor ingresa valores validos")
-        return
-    }
-
-    let producto = new Producto(nombre,precio,stock)
-
-    lista.push(producto)
-    console.table(lista)
+const sumar = document.getElementById("agregarProducto")
+sumar.addEventListener("click",agregarProducto)
 
 
-}

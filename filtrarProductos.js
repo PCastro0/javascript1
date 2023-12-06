@@ -1,4 +1,4 @@
-function filtrarProductos() {
+/*function filtrarProductos() {
     let palabraClave = prompt("ingresa el producto que buscas").toUpperCase().trim();
     let resultado = lista.filter((x) => x.nombre.toUpperCase().includes(palabraClave));
 
@@ -13,4 +13,4 @@ function filtrarProductos() {
             agregarProducto();
         }
     }
-}
+}*/
